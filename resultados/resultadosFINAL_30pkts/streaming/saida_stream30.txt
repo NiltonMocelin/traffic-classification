@@ -1,0 +1,96 @@
+142110 142110
+qtd dados total:  142110
+dadospb:  28422
+comecou!
+
+IT: 0
+treinando com bloco: 1
+treinando com bloco: 2
+treinando com bloco: 3
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 0
+Tempo total treino:  7.492063065885304  | Tempo total teste:  2.7534941898775287
+Precision: 0.909
+Recall: 0.931
+F1 Score: 0.917
+
+Adaptive Random Forest - it: 0
+Tempo total treino:  171.69857546089042  | Tempo total teste:  23.33566790918121
+Precision: 0.865
+Recall: 0.913
+F1 Score: 0.873
+IT: 1
+treinando com bloco: 0
+treinando com bloco: 2
+treinando com bloco: 3
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 1
+Tempo total treino:  7.818141779862344  | Tempo total teste:  4.35194935270556
+Precision: 0.895
+Recall: 0.896
+F1 Score: 0.884
+
+Adaptive Random Forest - it: 1
+Tempo total treino:  180.02687688576407  | Tempo total teste:  18.11186019397428
+Precision: 0.940
+Recall: 0.943
+F1 Score: 0.938
+IT: 2
+treinando com bloco: 0
+treinando com bloco: 1
+treinando com bloco: 3
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 2
+Tempo total treino:  8.186921371903736  | Tempo total teste:  3.809217247784545
+Precision: 0.922
+Recall: 0.911
+F1 Score: 0.914
+
+Adaptive Random Forest - it: 2
+Tempo total treino:  168.78541720203066  | Tempo total teste:  21.22259641862911
+Precision: 0.925
+Recall: 0.920
+F1 Score: 0.920
+IT: 3
+treinando com bloco: 0
+treinando com bloco: 1
+treinando com bloco: 2
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 3
+Tempo total treino:  7.9106498751207255  | Tempo total teste:  5.5749874286048
+Precision: 0.888
+Recall: 0.922
+F1 Score: 0.898
+
+Adaptive Random Forest - it: 3
+Tempo total treino:  180.52769688362605  | Tempo total teste:  16.725756139785517
+Precision: 0.916
+Recall: 0.908
+F1 Score: 0.901
+IT: 4
+treinando com bloco: 0
+treinando com bloco: 1
+treinando com bloco: 2
+treinando com bloco: 3
+Avaliando os modelos
+
+Hoeffding tree - it: 4
+Tempo total treino:  8.165083676525683  | Tempo total teste:  4.280743068862648
+Precision: 0.926
+Recall: 0.918
+F1 Score: 0.921
+
+Adaptive Random Forest - it: 4
+Tempo total treino:  180.50031662053516  | Tempo total teste:  28.43379587088566
+Precision: 0.919
+Recall: 0.937
+F1 Score: 0.922
+

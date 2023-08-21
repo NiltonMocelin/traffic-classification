@@ -1,0 +1,100 @@
+qtd dados total:  4440
+dadospb:  888
+bloco teste =  0
+
+Random Forest - it: 0
+Tempo total treino:  0.5303392499990878  | Tempo total teste:  0.0
+Precision: 0.969
+Recall: 0.969
+F1 Score: 0.969
+Gtk-Message: 19:51:57.007: Failed to load module "colorreload-gtk-module"
+Gtk-Message: 19:51:57.007: Failed to load module "window-decorations-gtk-module"
+
+Decision Tree - it: 0
+Tempo total treino:  0.03530495998711558  | Tempo total teste:  0.0
+Precision: 0.943
+Recall: 0.943
+F1 Score: 0.943
+
+SVM - it: 0
+Tempo total treino:  0.08223988699319307  | Tempo total teste:  0.0
+Precision: 0.730
+Recall: 0.726
+F1 Score: 0.682
+bloco teste =  1
+
+Random Forest - it: 1
+Tempo total treino:  0.5030321849990287  | Tempo total teste:  0.0
+Precision: 0.980
+Recall: 0.981
+F1 Score: 0.980
+
+Decision Tree - it: 1
+Tempo total treino:  0.031975458994566  | Tempo total teste:  0.0
+Precision: 0.959
+Recall: 0.959
+F1 Score: 0.958
+
+SVM - it: 1
+Tempo total treino:  0.07548652200057404  | Tempo total teste:  0.0
+Precision: 0.768
+Recall: 0.739
+F1 Score: 0.700
+bloco teste =  2
+
+Random Forest - it: 2
+Tempo total treino:  0.4946263609890593  | Tempo total teste:  0.0
+Precision: 0.979
+Recall: 0.979
+F1 Score: 0.979
+
+Decision Tree - it: 2
+Tempo total treino:  0.031772508002177346  | Tempo total teste:  0.0
+Precision: 0.954
+Recall: 0.954
+F1 Score: 0.954
+
+SVM - it: 2
+Tempo total treino:  0.07473365199984983  | Tempo total teste:  0.0
+Precision: 0.699
+Recall: 0.698
+F1 Score: 0.647
+bloco teste =  3
+
+Random Forest - it: 3
+Tempo total treino:  0.4959007609941182  | Tempo total teste:  0.0
+Precision: 0.981
+Recall: 0.982
+F1 Score: 0.981
+
+Decision Tree - it: 3
+Tempo total treino:  0.03197544700378785  | Tempo total teste:  0.0
+Precision: 0.952
+Recall: 0.953
+F1 Score: 0.952
+
+SVM - it: 3
+Tempo total treino:  0.07432812300976366  | Tempo total teste:  0.0
+Precision: 0.725
+Recall: 0.721
+F1 Score: 0.670
+bloco teste =  4
+
+Random Forest - it: 4
+Tempo total treino:  0.49401912900066236  | Tempo total teste:  0.0
+Precision: 0.980
+Recall: 0.979
+F1 Score: 0.979
+
+Decision Tree - it: 4
+Tempo total treino:  0.03188106899324339  | Tempo total teste:  0.0
+Precision: 0.976
+Recall: 0.976
+F1 Score: 0.976
+
+SVM - it: 4
+Tempo total treino:  0.0745954719823203  | Tempo total teste:  0.0
+Precision: 0.761
+Recall: 0.684
+F1 Score: 0.673
+

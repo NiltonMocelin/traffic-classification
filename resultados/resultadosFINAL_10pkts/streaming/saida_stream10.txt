@@ -1,0 +1,100 @@
+144280 144280
+qtd dados total:  144280
+dadospb:  28856
+comecou!
+
+IT: 0
+treinando com bloco: 1
+treinando com bloco: 2
+treinando com bloco: 3
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 0
+Tempo total treino:  9.757545088916231  | Tempo total teste:  5.411367903987411
+/home/niltonmocelin/.local/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Precision: 0.604
+Recall: 0.675
+F1 Score: 0.588
+
+Adaptive Random Forest - it: 0
+Tempo total treino:  201.44119886112094  | Tempo total teste:  19.17697407817468
+Precision: 0.873
+Recall: 0.871
+F1 Score: 0.853
+IT: 1
+treinando com bloco: 0
+treinando com bloco: 2
+treinando com bloco: 3
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 1
+Tempo total treino:  9.660683237514604  | Tempo total teste:  4.486669427675224
+/home/niltonmocelin/.local/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Precision: 0.658
+Recall: 0.690
+F1 Score: 0.640
+
+Adaptive Random Forest - it: 1
+Tempo total treino:  189.94522764886278  | Tempo total teste:  18.671883151182556
+Precision: 0.903
+Recall: 0.885
+F1 Score: 0.883
+IT: 2
+treinando com bloco: 0
+treinando com bloco: 1
+treinando com bloco: 3
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 2
+Tempo total treino:  7.828510620598536  | Tempo total teste:  2.5059282390102453
+Precision: 0.895
+Recall: 0.851
+F1 Score: 0.857
+
+Adaptive Random Forest - it: 2
+Tempo total treino:  190.85996175677064  | Tempo total teste:  23.071956946692808
+Precision: 0.862
+Recall: 0.838
+F1 Score: 0.810
+IT: 3
+treinando com bloco: 0
+treinando com bloco: 1
+treinando com bloco: 2
+treinando com bloco: 4
+Avaliando os modelos
+
+Hoeffding tree - it: 3
+Tempo total treino:  8.655372284742043  | Tempo total teste:  5.057714667167602
+Precision: 0.810
+Recall: 0.805
+F1 Score: 0.767
+
+Adaptive Random Forest - it: 3
+Tempo total treino:  177.65925676312327  | Tempo total teste:  26.37560273193958
+Precision: 0.846
+Recall: 0.822
+F1 Score: 0.794
+IT: 4
+treinando com bloco: 0
+treinando com bloco: 1
+treinando com bloco: 2
+treinando com bloco: 3
+Avaliando os modelos
+
+Hoeffding tree - it: 4
+Tempo total treino:  9.062628513795062  | Tempo total teste:  4.626262969741219
+Precision: 0.816
+Recall: 0.801
+F1 Score: 0.782
+
+Adaptive Random Forest - it: 4
+Tempo total treino:  181.92383606238582  | Tempo total teste:  27.132956360328535
+Precision: 0.909
+Recall: 0.900
+F1 Score: 0.898
+

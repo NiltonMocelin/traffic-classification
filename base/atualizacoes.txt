@@ -1,0 +1,203 @@
+# 06/06/23
+
+- três opções:
+	- continuar procurando uma base de dados melhor
+	
+	- utilizar uma dessas e classificar conforme seu rótulo definindo uma largura de banda para cada fluxo e escolhendo os que são de tempo-real/best-effort/não-tempo-real
+	
+	- utilizar uma combinação de diversas bases e classificar em categorias de requisitos de largura de banda/atraso/perda ao invés de aplicações
+
+- Escolha da base de dados
+
+- Validação da base de dados
+
+- Escolha dos algoritmos
+
+- Explicação dos algoritmos
+
+- Features utilizadas
+
+- Metodologia 
+
+- Testes
+
+- Comparações
+
+- Analises
+
+
+ -- utilizar um metodo baseado ML em data stream
+
+
+Metodo em bloco utilizando buffers para identificação.
+
+ ::: Comparar metodo em blocos e metodo em streaming: MOA (Str) + 1(Str) vs SVM(bloco) e RF(bloco)
+ 
+Analisar:
+ - precisão
+ - erro inicial, medio, final
+ - variação de resultados ao longo do tempo
+ - tempo de treinamento
+ - custo computacional !!!
+ - tempo de processamento para identificar um fluxo
+ - tempo de processamento até identificação correta.
+ 
+ 
+ Verificar a possibilidade de publicação - identificar artigos que comparam esses metodos e 
+ os que estão aplicados a identificação de fluxos de dados.
+ Contribuição: comparação de métodos ML em blocos e stream na aplicação de identificação
+ de fluxos de dados de aplicações na rede.
+ 
+ 
+ 
+ Apresentações parciais são enviar periodicamente o estado do desenvolvimento para o professor.
+ Datas de apresentação:  Acho que qualquer dia antes do final da disciplina.
+ 
+ Final: começo de julho dia 03.
+
+
+Utilizar SBC - de 10/12 pgs.
+
+
+Data is captured via the collection instrument by leveraging pmacct[17], an open-source
+passive network monitoring tool. Pmacct is enhanced with nDPI[15], an open-source deep
+packet inspection library, to generate network application labels which will serve as ”ground
+truth” for our experimental analysis
+
+
+
+
+#### ETAPAS:
+
+- decidir as bases de dados e as classes que se quer classificar [aqui por enquanto]
+
+- a base pode possuir algum tipo de informação como tipo de protocolo - usar isso e níveis de qualidade para a aplicação em termos de qtd de largura de banda de cada qualidade.
+
+- decidir as features - observar o artigo relacionado que fala sobre
+
+- desenvolver um algoritmo para extrair as features dos pcap  e gerar uma base de dados com as features de pacotes individuais.
+
+- decidir a janela - bunch de pacotes que serão observados
+
+- de alguma forma agrupar os dados/pacotes em bunch para utilizar em algoritmos de bunch - parece que é feito utilizando médias e desvios padrão e colocando tudo em uma linha.
+
+- baseado em largura de banda - usar o k-means para agrupar em classes
+
+- observar os endereços ou labels dos protocolos para identificar mais ou menos as aplicações
+
+- extrair algum gráfico sobre a distribuição das classes em largura banda
+
+- usando os dados do k-means, extrair uma base de dados balanceada
+
+- extrair mais gráficos para visualizar a base de dados.
+
+- escolher os algoritmos a serem utilizados
+
+- obter os algoritmos
+
+[até aqui para segunda]
+
+- separar a base de dados em 80% (treino) 20% (teste) de forma randomica.
+
+- criar estratégias para os métodos em bunch e stream (variando a janela de pacotes)
+
+- utilizar um reprodutor de pcap ou apenas simular lendo a base de dados um pacote por vez e criando os buffer para cada fluxo ? talvez a segunda a principio
+
+- analises e conclusoes -- fica para uma próxima.
+
+
+
+
+#########
+
+* Pesquisa bibliográfica:
+
+* Primeira tentativa - bases de dados, todas possuem fluxos com largura de banda total utilizada e o tempo de fluxo - utilizar isso para encontrar a largura de banda média utilizada pelo fluxo (eu sei que isso ignora muitas informações- ex o fluxo interrompeu e recomeçou? alguns pacotes foram entregues com maior janela de diferenca ...)
+
+* classificação: - usar um classificador utilizando o identificador do fluxo e a largura de banda utilizada.
+				 - Utilizar uma lista de endereços de aplicações de rede comuns como endereços relacionados ao youtube/skype/google-meeting e realizar a classificação em termos de tipo de aplicação - então criar uma tabela que possui os requisitos de cada tipo de aplicação e classificar usando isso.
+				 - utilizar uma base de dados com cópias dos pacotes (pcap) para que possa ser reproduzido.
+				 - utilizar um extrator de features para que a base de dados pcap possa ser util (e até rotulada talvez).
+				
+				
+		
+* Teste:
+	- matrix de confusão
+
+# Problemas:
+- para uma base de dados ser util precisa processar dados por pacote, para que possam ser reproduzidos (como seria em um cenário real).
+- algumas bases de dados não possuem dados por pacote apenas agregado.
+- método ML batch - pacotes são armazenados em um buffer, onde após algum número de pacotes, métricas são contabilizadas.
+- método ML stream - pacotes são armazenados em um buffer, onde métricas são contabilizadas em tempo-real
+
+
+- As bases de dados são desbalanceadas - muitos fluxos de um determinado grupo e poucos fluxos de outros grupos. É preciso reduzir o  bias equilibrando a base.
+- é preciso que os dados sejam sobre pacotes individuais para que se possa fazer blocos e utilizar nos algoritmos de bloco ou pegar um por um e utilizar nos algoritmos de stream
+- talvez antes de encontrar os requisitoss de qos seja necessário uma ML para classificar em tipos de aplicações conhecidas.
+
+
+---- Mudar as classes de filas provavelmente - tempo-real e não tempo real começam a ficar frageis e difíceis de identificar.
+Um modelo de classes consiste em:
+
+Multi-mídia> audio e vídeo
+
+iterativo-dadosgeral> tráfego iterativo e www (imagem/pequenos aquivos/páginas)
+
+best-effort> grandes-volumes de dados e tráfego não identificado
+
+
+--- obs um estudo importante é settar o idle_timeout correto para fluxos - fluxos de determinados tipos de aplicações ficam inativos por periodos diferentes.
+- diminuir a quantidade de packet-ins aumenta a eficiencia do controlador.
+http://www.ijfcc.org/papers/321-F0014.pdf
+
+- Demonstrou com simulações e experimentos que um valor entre 8-15s para idle_time traz bons resultados ->: https://ieeexplore.ieee.org/abstract/document/7247204?casa_token=WuJx8hDlWM8AAAAA:UjEH186IJ0vYR9HlP6Z5C66N9ju379S6ZILzqk0sBrmzN571yfDFHf2-ZtboDo7uT0S_cLAmmQNP
+
+
+
+OBS: nome para futuro framework/controlador WOLF == flow ao contrário -- melhorar
+
+
+-- usar medanas para largura de banda(tam pacotes) -- explorar histograma
+
+-- histogramas são semelhantes (original com todos os fluxos e dos fluxos individuais)
+-- largura de banda está errada ...
+
+
+-- Pegar as médias da largura de banda dos fluxos ativos para a mesma aplicação
+-- Pegar tbm o tempo de fluxo ativo de cada média para saber por quanto tempo se utiliza aquela largura de banda
+
+-- Vou ter então um conjunto de médias de largura de banda e tempo de uso da largura de banda
+-- Encontrar três grupos de qualidade -- conjuntos onde a media é baixa, media ou alta e o fluxo fica ativo por um período considerável·
+- cada grupo será uma classe: tipo aplicação+ nível de largura de banda,
+
+--- cada media de largura de banda deve servir de label (por agora) para cada fluxo ativo correspondente
+
+-- analisar o estudo estatístico de intervalos para média, para estabelecer 3 níveis de largura de banda para cada tipo de aplicação, baseado nos valores de média para fluxos ativos labeados anteriormente.
+
+-- sobre subsampling e utilizar poucos pacotes para classificação ML
+
+-- Para evitar que todos os pacotes sejam enviados ao controlador para então serem processados pelo metodo ML é possível criar regras de grupo que executam bucket rules (algo assim não lembro)
+e realizar o encaminhamento de um pacote para multiplas portas. Assim, é possível entregar um pacote como best-effort e também ao controlador, para classificação.
+
+
+OBSSS: QUASE ESQUECI -- uma das classes precisa ser tráfego best-effort/irrelevante/background/desconhecido ==> que seriam pacotes DNS..... Entao não excluir os fluxos estranhos, mas ao inves, montar outra base de subflows.
+
+- Obs> após gerar as bases analisar os algoritmos: tenho a impressão que algoritmos de streaming necessitam de comportamentos diferentes... mas se for precisar obter dados individuais dos pacotes dos blocos de pacotes dos subflows, por sorte estamos gerando as bases de dados intermediárias !!
+
+-> criado o algoritmo extrator de features -> criado
+
+-=> identificando as larguras de banda que serão utilizadas como classe, junto com o tipo de aplicação e classe de serviço
+-> precisa identificar burst traffic tbm?
+-> pq em alguns momentos pode ser que alguns pacotes muito grandes foram enviados (isso nao eh burst)
+-> em alguns momentos muitos pacotes foram enviados de forma repentina (isso é burst).
+
+
+--> como analisar congestionamentos/burst e tráfego https://www.cisco.com/c/en/us/support/docs/lan-switching/switched-port-analyzer-span/116260-technote-wireshark-00.html
+--> como reproduzir trafico burst para analise https://www.qacafe.com/resources/packet-loss-burst-effects-on-network-hardware/
+
+-> aparentemente MOA é feita em python -- integração python x java (ex: py4j): https://rsewiki.liacs.nl/calling_java_from_python
+
+-> MOA classificadores explicação : https://www.youtube.com/watch?v=fdf_cLRVKBo&ab_channel=WekaMOOC
+
+-> obs para algoritmos do tipo stream -> a base de dados precisa ser 10/20/30 linhas so com as features individuais do pacote para as informacoes
+-> obs para algoritmos do tipo bach -> a base de dados precisa ser uma linha que representa as features do bloco de 10/20/30 pacotes

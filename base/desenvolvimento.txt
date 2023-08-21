@@ -1,0 +1,204 @@
+## Sistemas Inteligentes - Classificação de Tráfego de Rede usando ML.
+
+#### Alguns links importantes:
+
+- como manipular pcap com python - [tutorial](https://vnetman.github.io/pcap/python/pyshark/scapy/libpcap/2018/10/25/analyzing-packet-captures-with-python-part-1.html)
+
+- PARA a classificação utilizando o framework. -> quando um pacote chegar definir brevemente como best-effort (por ex.) e criar regras de grupo com action bucket algo assim, para que o pacote seja encaminhado 
+ao destino enquanto que uma cópia seria enviada para análise do modelo ML no controlador, diminuindo o impacto da classificação. Talvez seja necessário marcar esses pacotes usando campo TOS para que o
+controlador identifique o comportamento correto com o evento packet_in
+
+-- obs, claramente abordagens desse sentido podem exigir balanceadores de carga para ter varios controladores operando redes com muitos hosts e switches.
+
+# ETAPAS:
+
+1 - decidir as bases de dados e as classes que se quer classificar [aqui por enquanto]
+
+2 - a base pode possuir algum tipo de informação como tipo de protocolo - usar isso e níveis de qualidade para a aplicação em termos de qtd de largura de banda de cada qualidade.
+
+3 - decidir as features - observar o artigo relacionado que fala sobre
+
+4 - desenvolver um algoritmo para extrair as features dos pcap  e gerar uma base de dados com as features de pacotes individuais.
+
+5 - decidir a janela - bunch de pacotes que serão observados
+
+6 - de alguma forma agrupar os dados/pacotes em bunch para utilizar em algoritmos de bunch - parece que é feito utilizando médias e desvios padrão e colocando tudo em uma linha.
+
+7 - baseado em largura de banda - usar o k-means para agrupar em classes
+
+8 - observar os endereços ou labels dos protocolos para identificar mais ou menos as aplicações
+
+9 - extrair algum gráfico sobre a distribuição das classes em largura banda
+
+10 - usando os dados do k-means, extrair uma base de dados balanceada
+
+11 - extrair mais gráficos para visualizar a base de dados.
+
+12 - escolher os algoritmos a serem utilizados
+
+13 - obter os algoritmos
+
+[até aqui para segunda]
+
+1x - analise matriz de correlação das variáveis.
+
+14 - separar a base de dados em 80% (treino) 20% (teste) de forma randomica.
+
+15 - criar estratégias para os métodos em bunch e stream (variando a janela de pacotes)
+
+16 - utilizar um reprodutor de pcap ou apenas simular lendo a base de dados um pacote por vez e criando os buffer para cada fluxo ? talvez a segunda a principio
+
+17 - analises e conclusoes -- fica para uma próxima.
+
+################
+
+# Desenvolvimento
+
+* JANELA de pacotes (amostra)
+
+- 10pkts, 20pkts, 30pkts
+
+- comecar para 10pkts
+
+- pegar um pcap e extrair apenas os 10 primeiros pacotes de cada fluxo - para cada conjunto de ip porta origem destino.
+
+- fazer o mesmo para 20 primeiros e 30 primeiros
+
+
+* Baseado em [link-base-nao-usada](https://www.kaggle.com/datasets/jsrojas/ip-network-traffic-flows-labeled-with-87-apps)
+
+- utilizar um dos extratores de features pode ser o CICFlowMeter https://github.com/ahlashkari/CICFlowMeter
+
+- tentar identificar o tipo de aplicação de cada fluxo utilizando ntopng https://github.com/ntop/ntopng
+
+- base de dados escolhida: ISCXVPN2016  vpn e não vpn : https://www.unb.ca/cic/datasets/vpn.html
+
+- Buscando programas extratores de features de pcap ou bibliotecas prontas - se não, fazer o meu:
+- Testando CICFlowMeter não funcionou direito bugs nenhuma versão rodou
+- Testando NetMate não funcionou (bug)
+- Testando go-flows
+- Testando tcptrace (antigao usado no dataset Moore) funcionou !!!
+
+- no fim, o controlador precisa identificar as features em tempo-real - então provavelmente seja necessário criar o próprio método de extração de features (observar o que funcionar para entender como extrair)
+
+- Usar ntopng para classificar fluxos em tipos de aplicações (classifica em 2540 aplicações parece). Mas precisa ser a versão dev.
+
+* Como criar as bases com amostras de 10/20/30 pacotes de fluxos:
+	- Criar código python para manipular pcap
+	- Identificar os fluxos - armazenar em uma lista
+	- Para cada fluxo, extrair os pacotes em ordem e colocar em um pcap
+	- Gera um pcap por fluxo
+	
+	- Sequencialmente: pegar 10/20/30 pacotes de cada pcap de fluxo e gerar um novo pcap com blocos de pacotes de fluxo agrupados.
+	- Nesta etapa, ignorar o fato de que por vezes os fluxos interrompem e continuam e os blocos de pacotes estariam desconexos.
+
+
+- Verificar como serão geradas as features - dar mais uma olhada se é possivel utilizar tcptrace mesmo ou se tem que montar o próprio.
+
+- Dividir em classes do tipo: audio, video, chat, web, ftp, email, bittorrent
+
+- Extrair a largura de banda utilizada media por cada fluxo unilateral de aplicação -- extrair até três níveis de largura de banda para cada (baixa qualidade, media qualidade, alta qualidade)
+
+- plotar em gráfico isso para poder observar.
+
+-- é preciso fazer um estudo sobre as features mais e menos significativas utilizando análise estatística -- pessoal usou bastante a matriz de correlação mas acredito ter outras ferramentas derivadas de ASC
+
+--- DEPOIS DISSO -- jogar nos algoritmos do MOA e RF/SVM e analisar os resultados.
+
+- Verificar as formas que uma conexão TCP ou UDP se encerram - para compreender como interpretar o consumo de largura de banda
+
+- TCP: por flag RST ou por 3-way-handshake: https://www.baeldung.com/cs/tcp-ip-reset-flag
+- UDP: Nao utiliza flags - pois é unidirecional 
+
+## gerando as sub-bases de dados:
+
+* As aplicações foram separadas.
+
+* Ler cada arquivo e extrair os fluxos em arquivos separados para cada par ip_src e ip_dst
+
+* Os fluxos DNS/ARP/LLMNR/NBNS devem montar a base de dados de fluxos best-effort/irrelevantes/background/desconhecidos !! pois eles podem vir a ser testados no modelo machine learning em algum momento.
+- Acho que background é um nome bom.
+
+-> criado o algoritmo extrator de features:
+			cont,class,applable,largura_banda,proto,dport,duracao,pkt_soma_tam,pkt_maior_tam,pkt_menor_tam,pkts_por_seg,1stq_pkt_tam,3rdq_pkt_tam,pkt_tam_media,pkt_tam_mediana,pkt_tam_std,\
+            pkts_maiores_media,pacotes_menores_media,payload_soma,payload_menor,payload_maior,payload_media,payload_std,payload_menor_128,payload_entre128_1024,\
+            payload_maior_1024,1stq_payload_tam,3rdq_payload_tam,IAT_menor,IAT_maior,IAT_soma,IAT_media,IAT_maiores_media,IAT_menores_media,IAT_std,1stq_IAT,3rdq_IAT,\
+            tcp_push_flags,tcp_urg_flags,tcp_syn_flags,tcp_fin_flags,tcp_rst_flags,tcp_ack_flags,tcp_flags,\
+            tcp_windowsize_soma,tcp_windowsize_media,tcp_windowsize_std,header_tam_soma,header_tam_media,header_tam_std
+
+## obtendo a largura de banda dos fluxos:
+
+* Uma conexão TCP se encerra conforme um 3-way-handshake onde se envia um pacote com flag FIN -> ; <- FIN/ACK ; ACK ->    OU quando se envia um pacote com flag RST a qualquer momento.
+
+* TCP:Sempre que encontrar um comportamento de encerramento calcular o tempo decorrido e largura de banda utilizada.
+
+* Depois fazer a média de consumo de largura de banda desses fluxos.
+
+* Para UDP: considerar 1s entre um pacote e outro como sendo outro fluxo já. (pelo menos por agora).
+
+* Obs: converter o tempo em segundos - o timestamp dos pacotes sao em milisegundos
+
+* Considerar um novo fluxo sempre que passar 5s-10s? (decidir) entre pacotes, pois eh o idle timeout das regras de fluxo do controlador - quando as regras expiram e precisa criar novas -- era 2s ou 5s uma vez mas foi modificado para testes e agora esta 30s !!
+-- considerar um tempo pequeno para que a largura de banda seja ajustada corretamente --> vamos supor 5s idle_timeout
+
+-- chamado de subflow um fluxo que est´a dentro de uma janela de transferencia
+
+----> criar as labels de largura de banda - quais classes devem ser criadas ?
+- audio [baixo=, medio=, alto=]
+- video [baixo=, medio=, alto=]
+- 
+
+
+--> como analisar congestionamentos/burst e tráfego https://www.cisco.com/c/en/us/support/docs/lan-switching/switched-port-analyzer-span/116260-technote-wireshark-00.html
+--> como reproduzir trafico burst para analise https://www.qacafe.com/resources/packet-loss-burst-effects-on-network-hardware/
+-> obs aparentemente o burst não é desejado, e é amenizado utilizando shaping e buffer na porta de saída (filas?);
+-> dar mais uma olhada e analisar o tráfego para verificar se podemos utilizar um valor medio baixo mesmo com bursts de tráfego .
+
+OBS: poderia verificar se duas medicoes do mesmo tipo de serviço mas de diferentes aplicações são estatisticamente diferentes -- comparar os valores do csv ---> ctz que ja vi isso em ASC
+-- Com isso, podemos ver se faz sentido levantar tratamentos diferentes para as aplicações ou só para as classes de serviço msm.
+
+O nome correto a ser pesquisado para classificação de tráfego é :real-time IP traffic classification
+
+-- analise dos pacotes da base teste: subflows curtos e bem diversificados. poucos pacotes, as vezes de 1400 as vezes de 400 --- dificil entender -- as vezes peer-to-peer, as vezes cliente-servidor.
+--> tudo esta se encaminhando para definir a largura de banda como sendo a mediana ou o maior valor encontrado...
+
+
+features_list:
+sa: source address
+da: destination address
+pr: protocol (6 or 17)
+src_port: source port
+dst_port: destination port
+bytes_out: total bytes out
+num_pkts_out: total packets out
+bytes_in: total bytes in
+num_pkts_in: total packets in
+time_start: time stamp of first packet
+time_end: time stamp of last packet
+intervals_ccnt[]: compact histogram of pkt arriving intervals
+ack_psh_rst_syn_fin_cnt[]: histogram of tcp flag counting
+hdr_distinct: number of distinct values of header lengths
+hdr_ccnt[]: compact histogram of header lengths
+pld_distinct: number of distinct values of payload length
+pld_ccnt[]: compact histogram of payload lengths
+hdr_mean: mean value of header lengths
+hdr_bin_40: # of pkts with header lengths between 28 and 40
+pld_bin_128: # of pkts whose payload lengths are below 128
+pld_bin_inf: # of pkts whose payload lengths are above 1024
+pld_max: max value of payload length
+pld_mean: mean value of payload length
+pld_medium: medium value of payload length
+pld_var: variance value of payload length
+rev_...: flow features of the reverse flow
+
+
+
+
+
+
+
+
+
+
+
+
